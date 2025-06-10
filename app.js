@@ -1,25 +1,24 @@
 const express = require("express");
-const fs = require("fs");
 const app = express();
 const port = process.env.PORT || 3000;
 
-let healthy = true;
+let healthy = false;
 
-// 상태 변경용 (디버그용 curl 요청)
-app.get("/kill", (req, res) => {
-    healthy = false;
-    res.send("App marked as unhealthy");
-});
+setTimeout(() => {
+    healthy = true;
+    console.log("[APP] Became healthy after 10s");
+}, 10000);
 
 app.get("/health", (req, res) => {
-    if (healthy) res.status(200).send("OK");
-    else res.status(500).send("NOT OK");
-});
-
-app.get("/", (req, res) => {
-    res.send("Hello from liveness probe demo!");
+    if (healthy) {
+        console.log("[/health] 200 OK");
+        res.send("OK");
+    } else {
+        console.log("[/health] 500 Not Ready");
+        res.status(500).send("Not Ready");
+    }
 });
 
 app.listen(port, () => {
-    console.log(`App running on port ${port}`);
+    console.log(`[APP] Express server running on port ${port}`);
 });
