@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const message = process.env.MESSAGE || "Hello from default!";
+
+const siteName = process.env.SITE_NAME || "default-site";
+const adminPassword = process.env.ADMIN_PASSWORD || "not-set";
 
 app.get("/", (req, res) => {
-    res.send(message);
+    res.send(`Site: ${siteName}, Admin PW: ${adminPassword}`);
 });
 
 app.listen(port, () => {
-    console.log(`App running on port ${port} with message: ${message}`);
+    console.log(`[APP] Running on ${port}, SITE_NAME=${siteName}, ADMIN_PASSWORD=${adminPassword}`);
 });
