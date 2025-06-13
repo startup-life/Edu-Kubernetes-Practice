@@ -1,16 +1,25 @@
 const express = require("express");
+const fs = require("fs");
+const os = require("os");
 const app = express();
 const port = process.env.PORT || 3000;
-const version = process.env.APP_VERSION || "v1";
+const path = "/data/hostname.txt";
 
 app.get("/", (req, res) => {
-    if (version === "v2") {
-        res.type("text").send("Hello from v2 \n");
+    const hostname = os.hostname();
+    let content = "(no hostname file)";
+
+    if (fs.existsSync(path)) {
+        content = fs.readFileSync(path, "utf8");
     } else {
-        res.type("text").send("Hello from v1 \n");
+        fs.writeFileSync(path, hostname);
+        content = hostname;
     }
+
+    res.setHeader("Content-Type", "text/plain");
+    res.send(`I am ${hostname}, stored ID: ${content}\n`);
 });
 
 app.listen(port, () => {
-    console.log(`[APP] ${version} running on port ${port}`);
+    console.log(`[APP] running on port ${port}`);
 });
