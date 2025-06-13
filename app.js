@@ -1,14 +1,24 @@
 const express = require("express");
+const fs = require("fs");
 const app = express();
 const port = process.env.PORT || 3000;
+const path = "/data/message.txt";
 
-setInterval(() => {
-    for (let i = 0; i < 1e7; i++) Math.sqrt(i);
-}, 100);
+app.use(express.json());
+
+app.post("/", (req, res) => {
+    const msg = req.body.message || "empty";
+    fs.writeFileSync(path, msg, "utf8");
+    res.send("Message saved.");
+});
 
 app.get("/", (req, res) => {
-    res.setHeader("Content-Type", "text/plain");
-    res.send("Hello from VPA target\n");
+    if (fs.existsSync(path)) {
+        const content = fs.readFileSync(path, "utf8");
+        res.send(`Saved message: ${content}`);
+    } else {
+        res.send("No message found.");
+    }
 });
 
 app.listen(port, () => {
