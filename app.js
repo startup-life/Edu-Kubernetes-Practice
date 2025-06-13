@@ -1,24 +1,24 @@
 const express = require("express");
-const fs = require("fs");
-const os = require("os");
 const app = express();
 const port = process.env.PORT || 3000;
-const path = "/data/hostname.txt";
+
+let load = false;
 
 app.get("/", (req, res) => {
-    const hostname = os.hostname();
-    let content = "(no hostname file)";
-
-    if (fs.existsSync(path)) {
-        content = fs.readFileSync(path, "utf8");
-    } else {
-        fs.writeFileSync(path, hostname);
-        content = hostname;
-    }
-
-    res.setHeader("Content-Type", "text/plain");
-    res.send(`I am ${hostname}, stored ID: ${content}\n`);
+    res.send("Hello from HPA target\n");
 });
+
+app.get("/load", (req, res) => {
+    load = true;
+    res.send("CPU load started\n");
+});
+
+// 백그라운드 CPU 부하
+setInterval(() => {
+    if (load) {
+        for (let i = 0; i < 1e8; i++) Math.sqrt(i);
+    }
+}, 100);
 
 app.listen(port, () => {
     console.log(`[APP] running on port ${port}`);
