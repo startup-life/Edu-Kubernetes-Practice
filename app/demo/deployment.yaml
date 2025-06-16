@@ -15,7 +15,7 @@ spec:
         app: demo
     spec:
       containers:
-        - name: demo-container
-          image: adapterz/k8s-pod:latest
+        - name: demo
+          image: adapterz/k8s-pod:argocd
           ports:
             - containerPort: 3000
