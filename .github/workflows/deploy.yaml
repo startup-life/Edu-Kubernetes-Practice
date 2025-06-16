@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE: adapterz/k8s-pod:latest
+      IMAGE: adapterz/k8s-pod:argocd
 
     steps:
       - name: Checkout
