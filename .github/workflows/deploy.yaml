@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE: adapterz/k8s-pod:argocd
+      IMAGE: adapterz/k8s-pod:latest
 
     steps:
       - name: Checkout
@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build --platform linux/amd64 -t $IMAGE .
+          docker build -t $IMAGE .
           docker push $IMAGE
 
       - name: Update deployment.yaml image
@@ -41,6 +41,5 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add ./app/demo/deployment.yaml
-          git commit -m "chore: update image to $IMAGE"
-          git push
+          git add ./app/demo/deployment.yaml || true
+          git diff --cached --quiet || (git commit -m "chore: update image to $IMAGE" && git push)
